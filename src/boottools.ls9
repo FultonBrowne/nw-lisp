@@ -1,0 +1,6 @@
+(defun (boot)
+       (print 'starting 'LISP 'userspace)
+       (def user 'fulton) ;; maybe allow some user name setting for pure ease of use
+       (def mode 'local) ;;you are on a local machine
+       ;;connect to a remote machine and pull needed init files -- or pull stuff from NVRAM
+       (start-repl)) ;; single user mode - can do anything - local user

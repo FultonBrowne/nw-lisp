@@ -1,4 +1,8 @@
 ;; repl by Fulton Browne
+(defun (profile)
+       (print 'default 'profile)
+       (print 'hello user)
+)
 (defun (prompt) ;; think of this as the $PS1
 	(princ "> ")
 	(flush (outport)) ;; this is dumb
@@ -6,9 +10,10 @@
 (defun (repl)
 	(prompt)
 	(setq in (read))
-	(if (or (equal in 'exit) (eofp in)) (error "good bye!"))
+	(if (or (equal in 'exit) (eofp in)) (error 'good 'bye!))
 	(print (catch-errors () (eval in)))
 	(repl))
 (defun (start-repl)
-	(print 'starting "FREPLv1.0")
+	(print 'FREPLv1.0)
+    (profile)
 (repl))

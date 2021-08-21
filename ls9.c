@@ -5519,44 +5519,10 @@ cell	*GC_roots[] = {
  */
 
 void usage(void) {
-	prints("Usage: ls9 [-Lhqv?] [-i file | -] [-l file]\n");
+	prints("Usage: ls9 [-L] [-i file | -] [-l file]\n");
 	prints("           [-- argument ... | file argument ...]\n");
 }
 
-void longusage(void) {
-	nl();
-	usage();
-	prints(	"\n"
-		"-h         print help (also -v, -?)\n"
-		"-L         print terms of use\n"
-		"-i file    restart image from file (default: ");
-	prints(	IMAGEFILE);
-	prints(	")\n"
-		"-i -       compile initial image from sources (");
-	prints(	IMAGESRC);
-	prints(	")\n"
-		"           (-i must be the first option!)\n");
-	prints(	"-l file    load program from file, can be repeated\n"
-		"-q         quiet (no banner, no prompt, exit on errors)\n"
-		"-- args    bind remaining arguments to (cmdline)\n"
-		"file args  run program, args in (cmdline), implies -q\n"
-		"\n");
-	exit(EXIT_SUCCESS);
-}
-
-void terms(void) {
-	nl();
-	prints(	"LISP9 ");
-	prints(VERSION);
-	prints(	" by Nils M Holm, 2018,2019\n\n"
-		"This program is in the public domain. In countries\n"
-		"where the concept of the public domain does not exist,\n"
-		"the Creative Commons Zero (CC0) license applies.\n"
-		"See: https://creativecommons.org/publicdomain/zero/1.0/");
-	nl();
-	nl();
-	exit(EXIT_SUCCESS);
-}
 
 char *cmdarg(char *s) {
 	if (NULL == s) {
@@ -5627,14 +5593,6 @@ int main(int argc, char **argv) {
 		k = strlen(argv[i]);
 		for (j=1; j<k; j++) {
 			switch (argv[i][j]) {
-			case '?':
-			case 'h':
-			case 'v':
-				longusage();
-				break;
-			case 'L':
-				terms();
-				break;
 			case 'l':
 				i++;
 				loadfile(cmdarg(argv[i]));
