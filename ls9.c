@@ -1592,12 +1592,14 @@ cell xread2(void) {
 		if (!Inlist) rderror("unexpected '.'", UNDEF);
 		return DOT;
 	}
-	else if (symbolic(c)) {
+	else {
 		return rdsymfix(c, 10, 1);
 	}
+	/*
 	else {
 		rderror("funny input character, code", mkfix(c));
 	}
+	*/
 	return NIL;
 }
 

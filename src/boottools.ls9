@@ -1,6 +1,5 @@
 ;; the "boot" sequence for local logins
 (defun (local-boot)
-       (print "")
        ;; things that need to be run the first time a system is *activated* (if you will)
        (profile 'local)
        (start-repl))

@@ -1,4 +1,4 @@
 (def man-pages '(("man" "Man test")))
 (defun (man term)
        (print (cdr (asss term man-pages))))
-(defun (look-man term)) ;; TODO
+(defun (look-man term) (printc "not done")) ;; TODO

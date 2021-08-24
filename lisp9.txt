@@ -3069,6 +3069,7 @@
 	-- (PRINC EXPR)         => OBJ ---------------------------------
 	-- (PRINC EXPR OUTPORT) => OBJ ---------------------------------
 	-- (PRINT EXPR ...)     => UNSPECIFIC  -------------------------
+	-- (PRINC EXPR ...)     => UNSPECIFIC  -------------------------
 
 	Write an EXPR to the given output port, or to (outport) when no
 	port was specified. PRIN writes the external representation of
