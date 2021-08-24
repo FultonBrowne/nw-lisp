@@ -1416,13 +1416,14 @@
 	-- (ASSOC EXPR ALIST) => PAIR ----------------------------------
 	-- (ASSQ EXPR ALIST)  => PAIR ----------------------------------
 	-- (ASSV EXPR ALIST)  => PAIR ----------------------------------
+	-- (ASSS EXPR ALIST)  => PAIR ----------------------------------
 
 	Search the given ALIST sequentially, from left to right, for a
 	member with EXPR in its car field. When such a member exists,
 	return it, otherwise return NIL.
 
-	ASSOC uses EQUAL to identify members, ASSV uses EQV, and ASSQ
-	uses EQ.
+	ASSOC uses EQUAL to identify members, ASSV uses EQV, ASSQ
+	uses EQ, and ASSS uses s=.
 
 	Examples:
 

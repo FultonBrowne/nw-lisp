@@ -1,2 +1,4 @@
-(defun (man term))
-(defun (look-man term))
+(def man-pages '(("man" "Man test")))
+(defun (man term)
+       (print (cdr (asss term man-pages))))
+(defun (look-man term)) ;; TODO

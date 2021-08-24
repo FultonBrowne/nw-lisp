@@ -1,7 +1,6 @@
 ;; the "boot" sequence for local logins
 (defun (local-boot)
-       (print 'starting 'LISP 'userspace)
-       ;; TODO: put a proper init system here
-       ;;connect to a remote machine and pull needed init files -- or pull stuff from NVRAM
+       (print "")
+       ;; things that need to be run the first time a system is *activated* (if you will)
        (profile 'local)
        (start-repl))

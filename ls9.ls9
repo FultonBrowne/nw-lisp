@@ -340,6 +340,11 @@ nil t
         ((eqv x (caar a)) (car a))
         (else (assv x (cdr a)))))
 
+(defun (asss x a)
+  (cond ((null a) nil)
+        ((s= x (caar a)) (car a))
+        (else (s= x (cdr a)))))
+
 (defun (assoc x a)
   (cond ((null a) nil)
         ((equal x (caar a)) (car a))
@@ -413,12 +418,22 @@ nil t
 (defun (print . xs)
   (cond ((null xs) (princ "\n"))
         ((null (cdr xs))
-          (prin (car xs))
+          (princ (car xs))
           (princ "\n"))
         (else
           (prin (car xs))
           (writec #\sp)
           (apply print (cdr xs)))))
+
+(defun (printc . xs)
+  (cond ((null xs) (princ "\n"))
+        ((null (cdr xs))
+          (princ (car xs))
+          (princ "\n"))
+        (else
+          (princ (car xs))
+          (writec #\sp)
+          (apply printc (cdr xs)))))
 
 (defun (readln . p)
   (let loop ((c (apply readc p))

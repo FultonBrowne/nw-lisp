@@ -5519,7 +5519,7 @@ cell	*GC_roots[] = {
  */
 
 void usage(void) {
-	prints("Usage: ls9 [-L] [-i file | -] [-l file]\n");
+	prints("Usage: ls9 [-i file | -] [-l file]\n");
 	prints("           [-- argument ... | file argument ...]\n");
 }
 

@@ -1,8 +1,14 @@
-(def user 'fulton) ;; Username as a default for remote log in's
+(def user "fulton") ;; Username as a default for remote log in's
+(def dump-file "fultons-session.ls9") ;; running (save) saves's the session to this file
 ;; Put user functions and macros here
 ;; edit the profile function to edit what runs on a new session
-;; edit the prompt function to change the way the prompt of FREPL operates
 (defun (profile mode)
-       (print 'Login 'user: user)
-       (print 'Login 'mode: mode)
-       (print 'for 'help 'use 'the '(man) 'function))
+       (printc "Login user: " user)
+       (printc "Login mode: " mode)
+       (printc "for help use the (man) function"))
+;; edit the (prompt) function to control the FREPL prompt
+;; BUG you must run (flush (outport)) at the end of the function
+(defun (prompt)
+       (princ "; ") ;; A basic change
+       ;; IDEAS: Show the time, heap space, and add auto image dumping
+       (flush (outport)))
