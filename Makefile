@@ -10,7 +10,7 @@ ls9:	ls9.c
 ls9.image:	ls9 ls9.ls9
 	rm -f ls9.image
 	echo "(dump-image \"ls9.image\")" | ./ls9 -q
-	echo "(save)" | ./ls9 -l src/help.ls9 -l src/disasm.ls9 -l src/grind.ls9 -l src/repl.ls9
+	echo "(save)" | ./ls9 -l src/help.ls9 -l src/disasm.ls9 -l src/grind.ls9 -l src/repl.ls9 -l src/boottools.ls9 -l src/profile.ls9
 
 lisp9.tr:	lisp9.txt
 	./ls9 src/print.ls9 -T -C -p 60 -l 6 -m -4 -t "LISP9 REFERENCE MANUAL" \

@@ -1,0 +1,2 @@
+(defun (man term))
+(defun (look-man term))

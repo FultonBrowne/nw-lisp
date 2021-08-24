@@ -1,6 +1,7 @@
-(defun (boot)
+;; the "boot" sequence for local logins
+(defun (local-boot)
        (print 'starting 'LISP 'userspace)
-       (def user 'fulton) ;; maybe allow some user name setting for pure ease of use
-       (def mode 'local) ;;you are on a local machine
+       ;; TODO: put a proper init system here
        ;;connect to a remote machine and pull needed init files -- or pull stuff from NVRAM
-       (start-repl)) ;; single user mode - can do anything - local user
+       (profile 'local)
+       (start-repl))
