@@ -1,0 +1,31 @@
+* NW-LISP
+** Brief overview
+A lisp system that runs on UNIX and will
+maybe boot itself one day
+** Goals:
++ Make a working LISP OS
++ Simplicity
++ Learning
+** Non goals:
++ Mass driver support
++ "Modern web"
++ speed
+** Things it does
++ LISP based on lisp9
++ neoftech rip off
++ Fun user profile stuff
++ Really crappy text editing
++ Really crappy man pages
+** Things it will do
++ boot itself
++ GUI based on plan9 draw
++ Remote logins
++ Bearable text editing
++ A bunch of silly programs
+** How to build
+if you really want to build it:
+Just run make
+** Bug reporting
+email me
+** I HAVE AN IDEA!!!
+I don't care
