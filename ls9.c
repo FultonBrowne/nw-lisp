@@ -1507,39 +1507,6 @@ cell rdquote(cell q) {
 	return cons(q, cons(n, NIL));
 }
 
-cell meta(void) {
-	int	c, cmd, i;
-	cell	n, cmdsym;
-	char	s[128];
-
-	cmd = tolower(readc());
-	c = readc();
-	while (' ' == c) c = readc();
-	i = 0;
-	while (c != '\n' && c != EOF) {
-		if (i < sizeof(s) - 6)
-			s[i++] = c;
-		c = readc();
-	}
-	rejectc(c);
-	s[i] = 0;
-	if ('l' == cmd) strcat(s, ".ls9");
-	n = mkstr(s, strlen(s));
-	n = 0 == i? NIL: cons(n, NIL);
-	protect(n);
-	switch (cmd) {
-	case 'c':	cmdsym = symref("syscmd"); break;
-	case 'h':	cmdsym = symref("help"); break;
-	case 'l':	cmdsym = P_load; break;
-	default: 	prints(",c = syscmd"); nl();
-			prints(",h = help"); nl();
-			prints(",l = load"); nl();
-			return NIL;
-	}
-	unprot(1);
-	return cons(cmdsym, n);
-}
-
 cell xread2(void) {
 	int	c;
 
@@ -1582,7 +1549,6 @@ cell xread2(void) {
 		return rdquote(S_qquote);
 	}
 	else if (',' == c) {
-		if (!Inlist && !Quoting) return meta();
 		c = readc();
 		if ('@' == c) return rdquote(S_splice);
 		rejectc(c);
