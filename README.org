@@ -24,7 +24,11 @@ maybe boot itself one day
 + A bunch of silly programs
 ** How to build
 if you really want to build it:
-Just run make
+Just run ~make~
+** How to run
+~./ls9 start.ls9~
+starts in the main big daddy REPL
+~./ls9 -b~ gives the lame sauce C REPL
 ** Bug reporting
 email me
 ** I HAVE AN IDEA!!!

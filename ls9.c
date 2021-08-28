@@ -5236,6 +5236,7 @@ void kbdintr(int sig) {
 }
 
 int	Quiet = 0;
+int Bootstrap = 0;
 
 void initrts(void) {
 	Rts = NIL;
@@ -5566,6 +5567,9 @@ int main(int argc, char **argv) {
 				loadfile(cmdarg(argv[i]));
 				j = strlen(argv[i]);
 				break;
+			case 'b':
+				Bootstrap++;
+				break;
 			case 'q':
 				Quiet = 1;
 				break;
@@ -5576,9 +5580,6 @@ int main(int argc, char **argv) {
 		}
 	}
 	bindset(S_quiet, Quiet? TRUE: NIL);
-	if (!Quiet && NULL == argv[i]) {
-		prints("LISP9 "); prints(VERSION); nl(); prints("type (start-repl) to get to the all-lisp repl"); nl();
-	}
 	Argv = NULL == argv[i]? NIL: argvec(&argv[i+1]);
 	start();
 	if (setjmp(Restart) != 0) exit(EXIT_FAILURE);
@@ -5586,6 +5587,6 @@ int main(int argc, char **argv) {
 		loadfile(argv[i]);
 		exit(EXIT_SUCCESS);
 	}
-	repl();
+	if (Bootstrap) repl(); /* REPL for bootstrapping the userspace */
 	return 0;
 }

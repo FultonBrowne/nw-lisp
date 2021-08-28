@@ -9,6 +9,7 @@
 ;; edit the (prompt) function to control the FREPL prompt
 ;; BUG you must run (flush (outport)) at the end of the function
 (defun (prompt)
-       (princ "; ") ;; A basic change
-       ;; IDEAS: Show the time, heap space, and add auto image dumping
+       (princ "; ") ;; A basic prompt change
+       (save) ;; Auto save you image
+       (gc) ;; Take out the garbage
        (flush (outport)))
