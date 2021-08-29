@@ -1,0 +1,21 @@
+;; The internal system for docs is NW LISP
+;; Header functions: (H1) (H2) (H3)...
+;; (P)
+;; Ok - I need this to work in more than just org -_-
+
+(defun (H1 s)
+        (printc "*" s))
+(defun (H2 s)
+        (printc "**" s))
+(defun (H3 s)
+        (printc "***" s))
+(defun (p s)
+       (princ " ")
+       (princ s)
+       (princ " "))
+(defun (l s)
+       (printc s))
+(defun (c s)
+       (princ "~")
+       (princ s)
+       (princ "~"))

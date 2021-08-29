@@ -1,0 +1,67 @@
+;;  _____             _
+;; |  ___| __ ___  __| |
+;; | |_ | '__/ _ \/ _` |
+;; |  _|| | |  __/ (_| |
+;; |_|  |_|  \___|\__,_|
+;;
+;; A simple set of text editing functions
+
+
+;; This is the first "real" program for NW-lisp
+;; will experiment with style and manual things
+
+;; fred is a very simple *buffer* editor for NWL
+;; A buffer editor is just a text editor that
+;; doesn't care where the buffer comes from
+;; fred will have to main modes of operation
+;; interactive and non-interactive
+;; interactive will be basically a lispy ed
+;; non interactive will be a collection of
+;; functions that deal with text in buffers
+
+;; the most basic is a random access char editor
+;; (sref) and (sset) let us change chars at random
+;; we just need to be able to add and remove stings
+;; at random.
+
+(defun (fred-insert-string buf pos s) ;; insert string s after offset pos in buffer buf and return the new state of buf
+       (sconc (substr buf 0 pos) s (substr buf (+ pos 1) (ssize buf))))
+
+(defun (fred-cut-string buf spos epos)
+       (sconc (substr buf 0 spos) (substr buf epos (ssize buf)))) ;; cut the chars starting at spos and ending at epos
+
+(defun (fred-append-buffer buf s)
+       (sconc buf s))
+
+;; now we need an interface based on cursor position
+;; fred-buffer: (pos buf)
+;; fred-backspace, fred-insert
+(defun (fred-backspace buf cpos)
+       (if (eqv cpos (ssize buf))
+           (substr buf 0 ( - cpos 1))
+           (sconc (substr buf 0 (- cpos 1) (substr buf (+ cpos 1) (ssize buf))))))
+
+(defun (fred-insert buf cpos s)
+       (if (eqv cpos (ssize buf)
+           (sconc buf s)
+           (fred-insert-string buf cpos s))))
+
+;; now we have the most basic editing commands
+;; Lets get some cursor moving commands
+;; (fred-next-nl) (fred-prev-nl)
+;; (fred-next-line) (fred-prev-line)
+;; (fred-start-line) (fred-end-line)
+
+(defun (fred-next-nl buf cpos)
+)
+
+(defun (fred-prev-nl buf cpos)
+)
+(defun (fred-start-line buf cpos)
+       (+ (fred-prev-nl buf cpos) 1)) ;; go back until you find a new line and then add one to that
+(defun (fred-end-line buf cpos)
+       (- (fred-next-nl buf cpos) 1)) ;; go forword until a newline - minus one
+(defun (fred-next-line buf cpos)
+       (+ (fred-next-nl buf cpos) 1)) ;; go forward until new line - plus one
+(defun (fed-prev-line buf cpos)
+       (- (fred-prev-nl buf cpos) 1)) ;; go back until new line - minus one
