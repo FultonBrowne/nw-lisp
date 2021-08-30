@@ -29,6 +29,9 @@ Just run ~make~
 ~./ls9 start.ls9~
 starts in the main big daddy REPL
 ~./ls9 -b~ gives the lame sauce C REPL
+** BUGS!!!
+We have them
++ and more!!!
 ** Bug reporting
 email me
 ** I HAVE AN IDEA!!!
