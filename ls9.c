@@ -10,13 +10,28 @@
 
 #define VERSION "20190812"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
-#include <signal.h>
-#include <setjmp.h>
+#ifdef unix
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <ctype.h>
+ #include <limits.h>
+ #include <signal.h>
+ #include <setjmp.h>
+ #define bye(x)	exit((x)? EXIT_FAILURE: EXIT_SUCCESS)
+#endif
+
+#ifdef plan9
+ #include <u.h>
+ #include <libc.h>
+ #include <stdio.h>
+ #include <ctype.h>
+ #include <ape/limits.h>
+ #include <ape/signal.h>
+ #define size_t	uvlong
+ #define bye(x)	exits((x)? "error": NULL)
+ #define ptrdiff_t vlong
+#endif
 
 /*
  * Tunable parameters
@@ -339,7 +354,7 @@ void expect(char *who, char *what, cell got) {
 void fatal(char *s) {
 	fprintf(stderr, "*** fatal error: ");
 	fprintf(stderr, "%s\n", s);
-	exit(EXIT_FAILURE);
+	bye(1);
 }
 
 /*
@@ -824,15 +839,15 @@ cell mkvec(int k) {
 	return n;
 }
 
-cell mkport(int portno, cell type) {
+cell mkport(int portnum, cell type) {
 	cell	n;
 	int	pf;
 
-	pf = Port_flags[portno];
-	Port_flags[portno] |= LOCK_TAG;
-	n = mkatom(portno, NIL);
+	pf = Port_flags[portnum];
+	Port_flags[portnum] |= LOCK_TAG;
+	n = mkatom(portnum, NIL);
 	n = cons3(type, n, ATOM_TAG|PORT_TAG);
-	Port_flags[portno] = pf;
+	Port_flags[portnum] = pf;
 	return n;
 }
 
@@ -1761,7 +1776,7 @@ void prin(cell x) { xprint(1, x); }
 
 void princ(cell x) { xprint(0, x); }
 
-void print(cell x) { prin(x); nl(); }
+void print1(cell x) { prin(x); nl(); } /* blame plan9's print() function */
 
 /*
  * Syntax checker
@@ -3748,9 +3763,11 @@ void b_writec(int c, cell p) {
 void b_rename(int old, int new) {
 	if (!stringp(old)) expect("rename", "string", old);
 	if (!stringp(new)) expect("rename", "string", new);
+	#ifdef unix
 	if (rename((char *) string(old), (char *) string(new)) < 0)
 		error("rename: cannot rename",
 			cons(old, cons(new, NIL)));
+	#endif
 }
 
 /*
@@ -3994,20 +4011,6 @@ char *xfwrite(void *buf, int siz, int n, FILE *f) {
 	return NULL;
 }
 
-void saveimg(char *path) {
-	char	b[TOKLEN+1], *p;
-
-	if (strlen(path)+7 >= TOKLEN)
-		error("image path too long", UNDEF);
-	strcpy(b, path);
-	p = strrchr(b, '.');
-	if (NULL == p) p = b+strlen(b);
-	*p = 0;
-	strcat(b, ".oimage");
-	remove(b);
-	rename(path, b);
-}
-
 cell *Imagevars[];
 
 char *dumpimg(char *path) {
@@ -4017,7 +4020,6 @@ char *dumpimg(char *path) {
 	struct imghdr	m;
 	char		*s;
 
-	saveimg(path);
 	f = fopen(path, "wb");
 	if (NULL == f) return "cannot create image file";
 	memset(&m, '_', sizeof(m));
@@ -4209,7 +4211,6 @@ cell	E0 = NIL,
 #define boxset(x,v)	(car(x) = (v))
 
 #define stackref(n)	(vector(Rts)[n])
-#define stackset(n,v)	(vector(Rts)[n] = (v))
 
 #define envbox(n)	(vector(Ep)[n])
 #define argbox(n)	(stackref(Fp-(n)))
@@ -4558,7 +4559,7 @@ void run(cell x) {
 		skip(ISIZE0);
 		break;
 	case OP_QUIT:
-		exit(EXIT_SUCCESS);
+		bye(0);
 		skip(ISIZE0);
 		break;
 	case OP_OBTAB:
@@ -4878,7 +4879,9 @@ void run(cell x) {
 		break;
 	case OP_SYSCMD:
 		if (!stringp(Acc)) expect("syscmd", "string", Acc);
+		#ifdef unix
 		Acc = mkfix(system((char *) string(Acc)) >> 8);
+		#endif
 		skip(ISIZE0);
 		break;
 	case OP_UNTAG:
@@ -5250,7 +5253,7 @@ void repl(void) {
 	cell	x;
 
 	if (setjmp(Restart) && Quiet)
-		exit(EXIT_FAILURE);
+		bye(1);
 	if (!Quiet) signal(SIGINT, kbdintr);
 	for (;;) {
 		reset_stdports();
@@ -5269,7 +5272,7 @@ void repl(void) {
 		Mxlev = 0;
 		x = eval(x, 0);
 		bindset(S_starstar, x);
-		print(x);
+		print1(x);
 	}
 	if (!Quiet) nl();
 }
@@ -5496,7 +5499,7 @@ void usage(void) {
 char *cmdarg(char *s) {
 	if (NULL == s) {
 		usage();
-		exit(EXIT_FAILURE);
+		bye(1);
 	}
 	return s;
 }
@@ -5530,7 +5533,7 @@ int main(int argc, char **argv) {
 	imgfile = IMAGEFILE;
 	usrimg = 0;
 	doload = 1;
-	if (setjmp(Restart) != 0) exit(EXIT_FAILURE);
+	if (setjmp(Restart) != 0) bye(1);
 	init();
 	i = 1;
 	if (argc > 2 && strcmp(argv[1], "-i") == 0) {
@@ -5552,7 +5555,7 @@ int main(int argc, char **argv) {
 			fatal("could not load library");
 		loadfile(IMAGESRC);
 	}
-	if (setjmp(Restart) != 0) exit(EXIT_FAILURE);
+	if (setjmp(Restart) != 0) bye(1);
 	for (; i<argc; i++) {
 		if (argv[i][0] != '-') break;
 		if ('-' == argv[i][1]) {
@@ -5575,17 +5578,17 @@ int main(int argc, char **argv) {
 				break;
 			default:
 				usage();
-				exit(EXIT_FAILURE);
+				bye(1);
 			}
 		}
 	}
 	bindset(S_quiet, Quiet? TRUE: NIL);
 	Argv = NULL == argv[i]? NIL: argvec(&argv[i+1]);
 	start();
-	if (setjmp(Restart) != 0) exit(EXIT_FAILURE);
+	if (setjmp(Restart) != 0) bye(1);
 	if (doload && argv[i] != NULL) {
 		loadfile(argv[i]);
-		exit(EXIT_SUCCESS);
+		bye(0);
 	}
 	if (Bootstrap) repl(); /* REPL for bootstrapping the userspace */
 	return 0;
