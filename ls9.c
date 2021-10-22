@@ -28,9 +28,16 @@
  #include <ctype.h>
  #include <ape/limits.h>
  #include <ape/signal.h>
- #define size_t	uvlong
  #define bye(x)	exits((x)? "error": NULL)
  #define ptrdiff_t vlong
+#endif
+
+#ifdef native
+ #include "kern/u.h"
+ #include "kern/kern.h"
+ #define bye(x)	reboot()
+ #define NULL nil
+ #define FILE int //There are no files but we need pointers for data streams
 #endif
 
 /*
