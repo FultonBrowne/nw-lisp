@@ -36,7 +36,7 @@
  #include "kern/u.h"
  #include "kern/kern.h"
  #define bye(x)	reboot()
- #define NULL nil
+ #define NULL ((void*)0)
  #define FILE int //There are no files but we need pointers for data streams
 #endif
 

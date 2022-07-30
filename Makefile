@@ -15,7 +15,9 @@ ls9.image:	ls9 ls9.ls9
 
 test:	ls9 ls9.image
 	./ls9 test.ls9
+	$(CC) $(CFLAGS) -Dnative -o ls9k ls9.c
+native: test
 
 clean:
-	rm -f ls9 ls9.image *.oimage \
+	rm -f ls9 ls9k ls9.image *.oimage \
 		 a.out *.core
