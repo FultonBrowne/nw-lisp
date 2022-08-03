@@ -5256,34 +5256,6 @@ void initrts(void) {
 	Fp = -1;
 }
 
-void repl(void) {
-	cell	x;
-
-	if (setjmp(Restart) && Quiet)
-		bye(1);
-	if (!Quiet) signal(SIGINT, kbdintr);
-	for (;;) {
-		reset_stdports();
-		clrtrace();
-		initrts();
-		bindset(S_errtag, NIL);
-		Protected = NIL;
-		Run = 0;
-		Intr = 0;
-		if (!Quiet) {
-			prints("boot> ");
-			flush();
-		}
-		x = xread();
-		if (EOFMARK == x && !Intr) break;
-		Mxlev = 0;
-		x = eval(x, 0);
-		bindset(S_starstar, x);
-		print1(x);
-	}
-	if (!Quiet) nl();
-}
-
 /*
  * Startup and initialization
  */
@@ -5577,9 +5549,6 @@ int main(int argc, char **argv) {
 				loadfile(cmdarg(argv[i]));
 				j = strlen(argv[i]);
 				break;
-			case 'b':
-				Bootstrap++;
-				break;
 			case 'q':
 				Quiet = 1;
 				break;
@@ -5597,6 +5566,5 @@ int main(int argc, char **argv) {
 		loadfile(argv[i]);
 		bye(0);
 	}
-	if (Bootstrap) repl(); /* REPL for bootstrapping the userspace */
 	return 0;
 }
