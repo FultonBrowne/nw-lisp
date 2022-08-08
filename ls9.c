@@ -5239,14 +5239,6 @@ cell eval(cell x, int r) {
 
 volatile int	Intr = 0;
 
-void kbdintr(int sig) {
-	Run = 0;
-	Intr = 1;
-	Mxlev = -1;
-}
-
-int	Quiet = 0;
-int Bootstrap = 0;
 
 void initrts(void) {
 	Rts = NIL;
@@ -5447,7 +5439,6 @@ void start(void) {
 	cell	n;
 
 	if (setjmp(Restart)) return;
-	if (!Quiet) signal(SIGINT, kbdintr);
 	n = assq(S_start, Glob);
 	if (NIL == n || closurep(cadr(n)) == 0) return;
 	n = cons(cadr(n), NIL);
@@ -5549,16 +5540,12 @@ int main(int argc, char **argv) {
 				loadfile(cmdarg(argv[i]));
 				j = strlen(argv[i]);
 				break;
-			case 'q':
-				Quiet = 1;
-				break;
 			default:
 				usage();
 				bye(1);
 			}
 		}
 	}
-	bindset(S_quiet, Quiet? TRUE: NIL);
 	Argv = NULL == argv[i]? NIL: argvec(&argv[i+1]);
 	start();
 	if (setjmp(Restart) != 0) bye(1);
